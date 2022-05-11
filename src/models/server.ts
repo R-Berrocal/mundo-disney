@@ -1,6 +1,7 @@
 import express,{ Application } from 'express';
 import cors from 'cors';
-import  path  from '../routes/auth';
+import  router  from '../routes/auth';
+import  db  from '../db/db_connection';
 
 export default class Server{
     private app:Application;
@@ -10,6 +11,8 @@ export default class Server{
         this.app=express();
         this.port=process.env.PORT!;
 
+        //db
+        this.dbConnection();
         //middlewares
         this.middleware();
 
@@ -26,8 +29,17 @@ export default class Server{
 
     }
 
+    async dbConnection(){
+        try {
+            await db.authenticate();
+            console.log('Connection has been established succesfully')
+        } catch (error:any) {
+            throw new Error(error);
+        }
+    }
+
     routes():void{
-        this.app.use(this.apiPath.auth,path)
+        this.app.use(this.apiPath.auth,router)
     }
 
     listen():void{
