@@ -1,6 +1,6 @@
 import express,{ Application } from 'express';
 import cors from 'cors';
-import  path  from './routes/auth';
+import  path  from '../routes/auth';
 
 export default class Server{
     private app:Application;
