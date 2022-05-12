@@ -32,6 +32,7 @@ export default class Server{
     async dbConnection(){
         try {
             await db.authenticate();
+            // db.sync({alter:true})
             console.log('Connection has been established succesfully')
         } catch (error:any) {
             throw new Error(error);

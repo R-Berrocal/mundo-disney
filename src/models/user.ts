@@ -1,8 +1,11 @@
-import {DataTypes} from 'sequelize';
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize';
 import db from '../db/db_connection';
+import {UserAttributes} from '../interfaces/user';
 
-const User = db.define("user_",{
-    iduser_:{
+
+
+const User = db.define<UserAttributes>("user_",{
+    iduser:{
         type:DataTypes.INTEGER,
         primaryKey:true,
         autoIncrement:true
@@ -17,7 +20,7 @@ const User = db.define("user_",{
         allowNull:false,
         
     },
-    password_:{
+    password:{
         type:DataTypes.STRING,
         allowNull:false,
     },
@@ -30,6 +33,6 @@ const User = db.define("user_",{
     tableName:"user_"
 });
 
-// User.sync({alter:true})
+
 
 export default User;

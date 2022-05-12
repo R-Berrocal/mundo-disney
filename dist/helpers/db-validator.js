@@ -12,28 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = exports.login = void 0;
+exports.emailExist = void 0;
 const user_1 = __importDefault(require("../models/user"));
-const login = (req, res) => {
-    res.json("llegaste al login bro");
-};
-exports.login = login;
-const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body } = req;
-    try {
-        const user = user_1.default.build(body);
-        yield user.save();
-        //status 201 creado
-        return res.status(201).json({
-            user
-        });
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            msg: "hable con el administrador"
-        });
+const emailExist = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    const emailExist = yield user_1.default.findOne({ where: { email } });
+    if (emailExist) {
+        throw new Error(`the email: ${email} is already in db`);
     }
 });
-exports.register = register;
-//# sourceMappingURL=auth.js.map
+exports.emailExist = emailExist;
+//# sourceMappingURL=db-validator.js.map
