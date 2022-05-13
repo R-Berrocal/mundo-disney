@@ -1,8 +1,9 @@
 import dotenv from 'dotenv';
 import express,{ Application } from 'express';
 import cors from 'cors';
-import  auth  from './routes/auth';
+
 import  {dbConnection}  from './db/db_connection';
+import { auth, character } from './routes';
 dotenv.config();
 
 const app:Application = express();
@@ -15,12 +16,13 @@ dbConnection();
 //cors
 app.use(cors());
         
-//lectura del body
+//body reading
 app.use(express.json());
 
 
 //Routes
-app.use("auth",auth)
+app.use("/auth",auth);
+app.use("/characters",character);
 
 
 //listen
