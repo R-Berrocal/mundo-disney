@@ -6,5 +6,14 @@ const db= new Sequelize(process.env.DATABAS_NAME||"disney","root",process.env.DA
     port:+process.env.DATABASE_PORT!,
   }
 );
+export const dbConnection=async()=>{
+  try {
+      await db.authenticate();
+      // db.sync({alter:true})
+      console.log('Connection has been established succesfully')
+  } catch (error:any) {
+      throw new Error(error);
+  }
+}
 
 export default db
