@@ -1,5 +1,5 @@
 import {Router, IRouter} from 'express';
-import { createCharacter, getCharacters } from '../controllers/character';
+import { createCharacter, deleteCharacter, getCharacters, updateCharacter } from '../controllers/character';
 import { check } from 'express-validator';
 import { validateFields } from '../middlewares/validate_fields';
 
@@ -14,6 +14,7 @@ router.post("/",[
     validateFields
 ],createCharacter);
 
-
+router.put("/:id",updateCharacter)
+router.delete("/:id",deleteCharacter)
 
 export default router;

@@ -1,4 +1,4 @@
-import User from "../models/user"
+import { Character,User } from "../models"
 
 export const emailExist = async(email:string)=>{
     const emailExist= await User.findOne({where:{email}})
@@ -6,3 +6,4 @@ export const emailExist = async(email:string)=>{
         throw new Error(`the email: ${email} is already in db`)
     }
 }
+
