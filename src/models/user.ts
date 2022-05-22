@@ -1,4 +1,4 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize';
+import {DataTypes} from 'sequelize';
 import db from '../db/db_connection';
 import UserAttributes from '../interfaces/user';
 
