@@ -3,7 +3,7 @@ import express,{ Application } from 'express';
 import cors from 'cors';
 
 import  {dbConnection}  from './db/db_connection';
-import { auth, character,  movie } from './routes';
+import { auth, character,  movie, genre } from './routes';
 dotenv.config();
 
 const app:Application = express();
@@ -24,6 +24,7 @@ app.use(express.json());
 app.use("/auth",auth);
 app.use("/characters",character);
 app.use("/movies",movie);
+app.use("/genres",genre);
 
 
 //listen

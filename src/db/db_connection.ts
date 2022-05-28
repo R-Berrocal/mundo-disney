@@ -9,7 +9,7 @@ const db= new Sequelize(process.env.DATABAS_NAME||"disney","root",process.env.DA
 export const dbConnection=async()=>{
   try {
       await db.authenticate();
-      // db.sync()
+      // db.sync();
       console.log('Connection has been established succesfully')
   } catch (error:any) {
       throw new Error(error);
