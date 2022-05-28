@@ -4,65 +4,57 @@ import Types from "../interfaces/typesQuery";
 import {Character, Movie, Movie_has_character} from '../models';
 
 
-export const getCharacters=async(req:Request,res:Response)=>{
-    try {    
-        const characters = await Character.findAll({
-            attributes:["name","image"]
-        });
 
-        
-        
-        return res.json({
-            characters
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            msg:`Talk with admin`
-        })
-    }
-}
 
-export const getCharactersFilter=async(req:Request<unknown,unknown,unknown,Types>,res:Response)=>{
+export const getCharacters=async(req:Request<unknown,unknown,unknown,Types>,res:Response)=>{
     try {
         const {name,age,weigh,movies} = req.query;
-        
-        const characters = await Character.findAll({
-            where:{
-                [Op.or]:[
-                    {name:{
-                        [Op.eq]:name
-                    }},
-                    {age:{
-                        [Op.substring]:age
-                    }},
-                    {weigh:{
-                        [Op.substring]:weigh
-                    }}
-
-                ]
-            },attributes:["name","image","age","weigh","history"]
-        });
-
-        if(movies){
-            const moviesFilter = await Movie.findAll({
+        let characters;
+        if(name||age||weigh||movies){
+                characters = await Character.findAll({
                 where:{
-                    idmovie:movies
-                },
-                attributes:["idmovie"],
-                include:{
-                    attributes:["name","image","age","weigh","history"],
-                    model:Character ,
-                }
+                    [Op.or]:[
+                        {name:{
+                            [Op.eq]:name
+                        }},
+                        {age:{
+                            [Op.substring]:age
+                        }},
+                        {weigh:{
+                            [Op.substring]:weigh
+                        }}
+    
+                    ]
+                },attributes:["name","image","age","weigh","history"]
             });
+    
+            if(movies){
+                const moviesFilter = await Movie.findAll({
+                    where:{
+                        idmovie:movies
+                    },
+                    attributes:["idmovie"],
+                    include:{
+                        attributes:["name","image","age","weigh","history"],
+                        model:Character ,
+                    }
+                });
+                return res.json({
+                    characterMovies:moviesFilter
+                });
+            }
+    
             return res.json({
-                characterMovies:moviesFilter
+                characters
             });
         }
-
+        characters = await Character.findAll({
+            attributes:["name","image"]
+        });  
         return res.json({
             characters
         });
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({
