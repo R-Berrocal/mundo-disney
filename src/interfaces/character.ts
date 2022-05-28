@@ -4,8 +4,8 @@ interface CharacterAttributes extends Model<InferAttributes<CharacterAttributes>
     idcharacter:number;
     image:CreationOptional<string>;
     name:string;
-    age:number;
-    weigh:CreationOptional<number>;
+    age:number|string;
+    weigh:CreationOptional<number|string>;
     history:CreationOptional<string>
 }
 
