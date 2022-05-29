@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { Op } from "sequelize";
-import Types from "../interfaces/typesQuery";
+import TypesQueryCharacter from "../interfaces/typesQueryCharacter";
 import {Character, Movie, Movie_has_character} from '../models';
 
 
 
 
-export const getCharacters=async(req:Request<unknown,unknown,unknown,Types>,res:Response)=>{
+export const getCharacters=async(req:Request<unknown,unknown,unknown,TypesQueryCharacter>,res:Response)=>{
     try {
         const {name,age,weigh,movies} = req.query;
         let characters;
@@ -63,7 +63,7 @@ export const getCharacters=async(req:Request<unknown,unknown,unknown,Types>,res:
     }
 }
 
-export const getDetails = async(req:Request,res:Response)=>{
+export const getDetailsCharacter = async(req:Request,res:Response)=>{
     const details= await Character.findAll({include:{model:Movie}});
     res.json({
         details

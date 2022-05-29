@@ -4,7 +4,7 @@ import {
     createDetail, 
     deleteCharacter,
     getCharacters, 
-    getDetails, 
+    getDetailsCharacter, 
     updateCharacter } from '../controllers/character';
 import { check } from 'express-validator';
 import { validateFields } from '../middlewares/validate_fields';
@@ -13,7 +13,7 @@ const router:IRouter= Router();
 
 //Get Characters
 router.get("/",getCharacters);
-router.get("/detail",getDetails);
+router.get("/detail",getDetailsCharacter);
 
 
 //Create Character
