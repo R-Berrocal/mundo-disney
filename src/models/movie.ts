@@ -42,3 +42,4 @@ const Movie = db.define<MovieAttributes>(
 );
 
 export default Movie;
+Movie.sync({ alter: true });

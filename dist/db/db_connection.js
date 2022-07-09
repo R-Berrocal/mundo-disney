@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.dbConnection = void 0;
 const sequelize_1 = require("sequelize");
-const db = new sequelize_1.Sequelize(process.env.DATABAS_NAME || "disney", "root", process.env.DATABASE_PASS, {
+const db = new sequelize_1.Sequelize(process.env.DATABAS_NAME || 'disney', 'root', process.env.DATABASE_PASS, {
     host: process.env.DATABASE_HOST,
     dialect: 'mysql',
     port: +process.env.DATABASE_PORT,
