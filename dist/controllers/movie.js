@@ -66,9 +66,7 @@ const getMovies = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 movie
             });
         }
-        movie = yield models_1.Movie.findAll({
-            attributes: ["title", "image", "creation_date"]
-        });
+        movie = yield models_1.Movie.findAll();
         return res.json({
             movie
         });
