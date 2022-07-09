@@ -13,17 +13,53 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = exports.login = void 0;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_1 = __importDefault(require("../models/user"));
-const login = (req, res) => {
-    res.json("llegaste al login bro");
-};
+const generate_token_1 = require("../helpers/generate_token");
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    try {
+        const user = yield user_1.default.findOne({ where: { email } });
+        //validacion del email
+        if (!(user === null || user === void 0 ? void 0 : user.email)) {
+            return res.status(400).json({
+                msg: `User / password wrong -  email`
+            });
+        }
+        //validacion del user.condition
+        if (!user.condition) {
+            return res.status(400).json({
+                msg: `User / password  wrong - condition: false`
+            });
+        }
+        //validacion password
+        const validPasswrod = bcryptjs_1.default.compareSync(password, user.password);
+        if (!validPasswrod) {
+            return res.status(400).json({
+                msg: `User / password  wrong - password`
+            });
+        }
+        const token = yield (0, generate_token_1.generateToken)(user.iduser);
+        return res.json({
+            user,
+            token
+        });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            msg: `talk to the administrator`
+        });
+    }
+});
 exports.login = login;
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
     try {
         const user = user_1.default.build(body);
+        const salt = bcryptjs_1.default.genSaltSync();
+        user.password = bcryptjs_1.default.hashSync(body.password, salt);
         yield user.save();
-        //status 201 creado
         return res.status(201).json({
             user
         });

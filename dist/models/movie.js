@@ -5,32 +5,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const db_connection_1 = __importDefault(require("../db/db_connection"));
-const User = db_connection_1.default.define("user_", {
-    iduser: {
+const Movie = db_connection_1.default.define("movie", {
+    idmovie: {
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    name: {
+    image: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true,
+    },
+    title: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false
     },
-    email: {
-        type: sequelize_1.DataTypes.STRING,
-        unique: true,
-        allowNull: false,
+    creation_date: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false
     },
-    password: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
-    },
-    condition: {
-        type: sequelize_1.DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true
+    qualification: {
+        type: sequelize_1.DataTypes.TINYINT,
+        defaultValue: 0
     }
 }, {
-    tableName: "user_"
+    tableName: "movie"
 });
-exports.default = User;
-//# sourceMappingURL=user.js.map
+exports.default = Movie;
+//# sourceMappingURL=movie.js.map
