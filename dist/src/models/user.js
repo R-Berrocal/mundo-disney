@@ -5,15 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const db_connection_1 = __importDefault(require("../db/db_connection"));
-const User = db_connection_1.default.define("user_", {
+const User = db_connection_1.default.define('user_', {
     iduser: {
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
     name: {
         type: sequelize_1.DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
     },
     email: {
         type: sequelize_1.DataTypes.STRING,
@@ -27,10 +27,10 @@ const User = db_connection_1.default.define("user_", {
     condition: {
         type: sequelize_1.DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: true
-    }
+        defaultValue: true,
+    },
 }, {
-    tableName: "user_"
+    tableName: 'user_',
 });
 exports.default = User;
 //# sourceMappingURL=user.js.map
