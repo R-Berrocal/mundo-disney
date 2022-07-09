@@ -62,9 +62,7 @@ const getCharacters = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 characters
             });
         }
-        characters = yield models_1.Character.findAll({
-            attributes: ["name", "image"]
-        });
+        characters = yield models_1.Character.findAll();
         return res.json({
             characters
         });

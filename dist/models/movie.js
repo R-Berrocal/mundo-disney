@@ -19,6 +19,9 @@ const Movie = db_connection_1.default.define("movie", {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false
     },
+    description: {
+        type: sequelize_1.DataTypes.TEXT,
+    },
     creation_date: {
         type: sequelize_1.DataTypes.DATE,
         allowNull: false
@@ -26,6 +29,9 @@ const Movie = db_connection_1.default.define("movie", {
     qualification: {
         type: sequelize_1.DataTypes.TINYINT,
         defaultValue: 0
+    },
+    price: {
+        type: sequelize_1.DataTypes.FLOAT
     }
 }, {
     tableName: "movie"

@@ -16,6 +16,9 @@ const Movie = db.define<MovieAttributes>("movie",{
         type:DataTypes.STRING,
         allowNull:false
     },
+    description:{
+        type:DataTypes.TEXT,
+    },
     creation_date:{
         type:DataTypes.DATE,
         allowNull:false
@@ -23,6 +26,9 @@ const Movie = db.define<MovieAttributes>("movie",{
     qualification:{
         type:DataTypes.TINYINT,
         defaultValue:0
+    },
+    price:{
+        type:DataTypes.FLOAT
     }
 },{
     tableName:"movie"
