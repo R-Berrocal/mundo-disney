@@ -46,9 +46,7 @@ export const getMovies=async(req:Request<unknown,unknown,unknown,TypesQueryMovie
                 movie
             });
         }
-        movie = await Movie.findAll({
-            attributes:["title","image","creation_date"]
-        });  
+        movie = await Movie.findAll();  
         return res.json({
             movie
         });

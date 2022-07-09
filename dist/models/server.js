@@ -38,6 +38,7 @@ class Server {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield db_connection_1.default.authenticate();
+                // db.sync({alter:true})
                 console.log('Connection has been established succesfully');
             }
             catch (error) {

@@ -8,17 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.emailExist = void 0;
-const user_1 = __importDefault(require("../models/user"));
+exports.genreExist = exports.emailExist = void 0;
+const models_1 = require("../models");
 const emailExist = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    const emailExist = yield user_1.default.findOne({ where: { email } });
+    const emailExist = yield models_1.User.findOne({ where: { email } });
     if (emailExist) {
         throw new Error(`the email: ${email} is already in db`);
     }
 });
 exports.emailExist = emailExist;
+const genreExist = (name) => __awaiter(void 0, void 0, void 0, function* () {
+    const genreExist = yield models_1.Genre.findOne({ where: { name } });
+    if (genreExist) {
+        throw new Error(`the genre: ${name} is already in db`);
+    }
+});
+exports.genreExist = genreExist;
 //# sourceMappingURL=db-validator.js.map
