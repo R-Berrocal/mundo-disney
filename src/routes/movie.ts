@@ -1,5 +1,5 @@
 import {Router, IRouter} from 'express';
-import { createDetailMovies, createMovie, deleteMovie,  getDetailsMovie, getMovies, updateMovie } from '../controllers/movie';
+import { createDetailMovies, createMovie, deleteMovie,  getDetailsMovie, getMovie, getMovies, updateMovie } from '../controllers/movie';
 import { check } from 'express-validator';
 import { validateFields } from '../middlewares/validate_fields';
 
@@ -8,6 +8,7 @@ const router:IRouter= Router();
 //Get Movies
 router.get("/",getMovies);
 router.get("/detail",getDetailsMovie);
+router.get("/:id",getMovie);
 
 //Create Character
 router.post("/",[
