@@ -113,24 +113,29 @@ export const createCharacter = async (req: Request, res: Response) => {
 //Para asignar id de peliculas existentes a personajes existentes
 export const createDetail = async (req: Request, res: Response) => {
   try {
-    const { movieIdmovie, characterIdcharacter } = req.body;
-    const movie = await Movie.findByPk(movieIdmovie);
+    const { moviesId, characterIdcharacter } = req.body;
     const character = await Character.findByPk(characterIdcharacter);
-    if (!movie) {
-      return res.status(400).json({
-        msg: `El id ${movieIdmovie} not exist in movie`,
-      });
-    }
+
     if (!character) {
       return res.status(400).json({
         msg: `El id ${characterIdcharacter} not exist in character`,
       });
     }
-    const movie_has_character = Movie_has_character.build({ movieIdmovie, characterIdcharacter });
-    await movie_has_character.save();
+    await Promise.all(
+      moviesId.map(async (movieIdmovie: any) => {
+        const movie = await Movie.findByPk(movieIdmovie);
 
+        if (!movie) {
+          return res.status(400).json({
+            msg: `El id ${movieIdmovie} not exist in movie`,
+          });
+        }
+        const movie_has_character = Movie_has_character.build({ movieIdmovie, characterIdcharacter });
+        await movie_has_character.save();
+      })
+    );
     return res.status(201).json({
-      movie_has_character,
+      status: 'ok',
     });
   } catch (error) {
     console.log(error);

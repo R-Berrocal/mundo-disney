@@ -20,7 +20,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCharacter = exports.updateCharacter = exports.createDetail = exports.createCharacter = exports.getDetailsCharacter = exports.getCharacters = void 0;
+exports.deleteCharacter = exports.updateCharacter = exports.createDetail = exports.createCharacter = exports.getDetailsCharacter = exports.getCharacter = exports.getCharacters = void 0;
 const sequelize_1 = require("sequelize");
 const models_1 = require("../models");
 const getCharacters = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -31,54 +31,84 @@ const getCharacters = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             characters = yield models_1.Character.findAll({
                 where: {
                     [sequelize_1.Op.or]: [
-                        { name: {
-                                [sequelize_1.Op.eq]: name
-                            } },
-                        { age: {
-                                [sequelize_1.Op.substring]: age
-                            } },
-                        { weigh: {
-                                [sequelize_1.Op.substring]: weigh
-                            } }
-                    ]
-                }, attributes: ["name", "image", "age", "weigh", "history"]
+                        {
+                            name: {
+                                [sequelize_1.Op.eq]: name,
+                            },
+                        },
+                        {
+                            age: {
+                                [sequelize_1.Op.substring]: age,
+                            },
+                        },
+                        {
+                            weigh: {
+                                [sequelize_1.Op.substring]: weigh,
+                            },
+                        },
+                    ],
+                },
+                attributes: ['name', 'image', 'age', 'weigh', 'history'],
             });
             if (movies) {
                 const moviesFilter = yield models_1.Movie.findAll({
                     where: {
-                        idmovie: movies
+                        idmovie: movies,
                     },
-                    attributes: ["idmovie"],
+                    attributes: ['idmovie'],
                     include: {
-                        attributes: ["name", "image", "age", "weigh", "history"],
+                        attributes: ['name', 'image', 'age', 'weigh', 'history'],
                         model: models_1.Character,
-                    }
+                    },
                 });
                 return res.json({
-                    characterMovies: moviesFilter
+                    characterMovies: moviesFilter,
                 });
             }
             return res.json({
-                characters
+                characters,
             });
         }
         characters = yield models_1.Character.findAll();
         return res.json({
-            characters
+            characters,
         });
     }
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });
 exports.getCharacters = getCharacters;
+const getCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const character = yield models_1.Character.findByPk(id, {
+            include: {
+                model: models_1.Movie,
+            },
+        });
+        if (!character) {
+            return res.status(400).json({
+                msg: `Character not exist in db`,
+            });
+        }
+        return res.json({ character });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: `Talk with admin`,
+        });
+    }
+});
+exports.getCharacter = getCharacter;
 const getDetailsCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const details = yield models_1.Character.findAll({ include: { model: models_1.Movie } });
     res.json({
-        details
+        details,
     });
 });
 exports.getDetailsCharacter = getDetailsCharacter;
@@ -88,13 +118,13 @@ const createCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function
         const character = models_1.Character.build(body);
         yield character.save();
         return res.status(201).json({
-            character
+            character,
         });
     }
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });
@@ -102,29 +132,31 @@ exports.createCharacter = createCharacter;
 //Para asignar id de peliculas existentes a personajes existentes
 const createDetail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { movieIdmovie, characterIdcharacter } = req.body;
-        const movie = yield models_1.Movie.findByPk(movieIdmovie);
+        const { moviesId, characterIdcharacter } = req.body;
         const character = yield models_1.Character.findByPk(characterIdcharacter);
-        if (!movie) {
-            return res.status(400).json({
-                msg: `El id ${movieIdmovie} not exist in movie`
-            });
-        }
         if (!character) {
             return res.status(400).json({
-                msg: `El id ${characterIdcharacter} not exist in character`
+                msg: `El id ${characterIdcharacter} not exist in character`,
             });
         }
-        const movie_has_character = models_1.Movie_has_character.build({ movieIdmovie, characterIdcharacter });
-        yield movie_has_character.save();
+        yield Promise.all(moviesId.map((val) => __awaiter(void 0, void 0, void 0, function* () {
+            const movie = yield models_1.Movie.findByPk(val);
+            if (!movie) {
+                return res.status(400).json({
+                    msg: `El id ${val} not exist in movie`,
+                });
+            }
+            const movie_has_character = models_1.Movie_has_character.build({ val, characterIdcharacter });
+            yield movie_has_character.save();
+        })));
         return res.status(201).json({
-            movie_has_character
+            status: 'ok',
         });
     }
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });
@@ -136,7 +168,7 @@ const updateCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function
         const character = yield models_1.Character.findByPk(id);
         if (!character) {
             return res.status(400).json({
-                msg: `Character not exist in db`
+                msg: `Character not exist in db`,
             });
         }
         yield character.update(resto);
@@ -145,7 +177,7 @@ const updateCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });
@@ -156,18 +188,18 @@ const deleteCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function
         const character = yield models_1.Character.findByPk(id);
         if (!character) {
             return res.status(400).json({
-                msg: `Character not exist in db`
+                msg: `Character not exist in db`,
             });
         }
         yield character.destroy();
         res.json({
-            delete: character
+            delete: character,
         });
     }
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });

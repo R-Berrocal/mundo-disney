@@ -8,6 +8,7 @@ const router = (0, express_1.Router)();
 //Get Movies
 router.get("/", movie_1.getMovies);
 router.get("/detail", movie_1.getDetailsMovie);
+router.get("/:id", movie_1.getMovie);
 //Create Character
 router.post("/", [
     (0, express_validator_1.check)("title", "title is required").not().isEmpty().isLength({ max: 50 }),

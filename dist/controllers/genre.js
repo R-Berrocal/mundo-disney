@@ -20,36 +20,57 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteGenre = exports.updateGenre = exports.createGenre = exports.getGenres = void 0;
+exports.deleteGenre = exports.updateGenre = exports.createGenre = exports.getGender = exports.getGenres = void 0;
 const models_1 = require("../models");
 const getGenres = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const genres = yield models_1.Genre.findAll();
         return res.json({
-            genres
+            genres,
         });
     }
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });
 exports.getGenres = getGenres;
+const getGender = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const gender = yield models_1.Genre.findByPk(id);
+        if (!gender) {
+            return res.status(401).json({
+                mgs: 'gender not found',
+            });
+        }
+        return res.json({
+            gender,
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: `Talk with admin`,
+        });
+    }
+});
+exports.getGender = getGender;
 const createGenre = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { body } = req;
         const genre = models_1.Genre.build(body);
         yield genre.save();
         return res.status(201).json({
-            genre
+            genre,
         });
     }
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });
@@ -61,7 +82,7 @@ const updateGenre = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const genre = yield models_1.Genre.findByPk(id);
         if (!genre) {
             return res.status(400).json({
-                msg: `Genre not exist in db`
+                msg: `Genre not exist in db`,
             });
         }
         yield genre.update(resto);
@@ -70,7 +91,7 @@ const updateGenre = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });
@@ -81,18 +102,18 @@ const deleteGenre = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const genre = yield models_1.Genre.findByPk(id);
         if (!genre) {
             return res.status(400).json({
-                msg: `Genre not exist in db`
+                msg: `Genre not exist in db`,
             });
         }
         yield genre.destroy();
         res.json({
-            delete: genre
+            delete: genre,
         });
     }
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });

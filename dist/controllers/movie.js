@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMovie = exports.updateMovie = exports.createDetailMovies = exports.createMovie = exports.getDetailsMovie = exports.getMovies = void 0;
+exports.deleteMovie = exports.updateMovie = exports.createDetailMovies = exports.createMovie = exports.getDetailsMovie = exports.getMovie = exports.getMovies = void 0;
 const sequelize_1 = require("sequelize");
 const models_1 = require("../models");
 const movie_has_genre_1 = __importDefault(require("../models/movie_has_genre"));
@@ -35,54 +35,79 @@ const getMovies = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             movie = yield models_1.Movie.findAll({
                 where: {
                     [sequelize_1.Op.or]: [
-                        { title: {
-                                [sequelize_1.Op.eq]: name
-                            } },
-                    ]
-                }, attributes: ["idmovie", "image", "title"]
+                        {
+                            title: {
+                                [sequelize_1.Op.eq]: name,
+                            },
+                        },
+                    ],
+                },
+                attributes: ['idmovie', 'image', 'title'],
             });
             if (genre) {
                 const genreFilter = yield models_1.Genre.findAll({
                     where: {
-                        idgenre: genre
+                        idgenre: genre,
                     },
-                    attributes: ["idgenre"],
+                    attributes: ['idgenre'],
                     include: {
-                        attributes: ["idmovie", "image", "title"],
+                        attributes: ['idmovie', 'image', 'title'],
                         model: models_1.Movie,
-                    }
+                    },
                 });
                 return res.json({
-                    moviesGenre: genreFilter
+                    moviesGenre: genreFilter,
                 });
             }
             if (order) {
-                const movieOr = yield models_1.Movie.findAll({ order: [["title", order.toUpperCase()]], attributes: ["idmovie", "image", "title"] });
+                const movieOr = yield models_1.Movie.findAll({
+                    order: [['title', order.toUpperCase()]],
+                    attributes: ['idmovie', 'image', 'title'],
+                });
                 return res.json({
-                    movies: movieOr
+                    movies: movieOr,
                 });
             }
             return res.json({
-                movie
+                movie,
             });
         }
         movie = yield models_1.Movie.findAll();
         return res.json({
-            movie
+            movie,
         });
     }
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });
 exports.getMovies = getMovies;
+const getMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const movie = yield models_1.Movie.findByPk(id, { include: { model: models_1.Character } });
+        if (!movie) {
+            return res.status(400).json({
+                msg: `Movie not exist in db`,
+            });
+        }
+        return res.json({ movie });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: `Talk with admin`,
+        });
+    }
+});
+exports.getMovie = getMovie;
 const getDetailsMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const detail = yield models_1.Movie.findAll({ include: { model: models_1.Character } });
     return res.json({
-        detail
+        detail,
     });
 });
 exports.getDetailsMovie = getDetailsMovie;
@@ -92,13 +117,13 @@ const createMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const movie = models_1.Movie.build(body);
         yield movie.save();
         return res.status(201).json({
-            movie
+            movie,
         });
     }
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });
@@ -110,24 +135,24 @@ const createDetailMovies = (req, res) => __awaiter(void 0, void 0, void 0, funct
         const genre = yield models_1.Genre.findByPk(genreIdgenre);
         if (!movie) {
             return res.status(400).json({
-                msg: `El id ${movieIdmovie} not exist in movie`
+                msg: `El id ${movieIdmovie} not exist in movie`,
             });
         }
         if (!genre) {
             return res.status(400).json({
-                msg: `El id ${genreIdgenre} not exist in genre`
+                msg: `El id ${genreIdgenre} not exist in genre`,
             });
         }
         const movie_has_genre = movie_has_genre_1.default.build({ movieIdmovie, genreIdgenre });
         yield movie_has_genre.save();
         return res.status(201).json({
-            movie_has_genre
+            movie_has_genre,
         });
     }
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });
@@ -139,7 +164,7 @@ const updateMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const movie = yield models_1.Movie.findByPk(id);
         if (!movie) {
             return res.status(400).json({
-                msg: `Movie not exist in db`
+                msg: `Movie not exist in db`,
             });
         }
         yield movie.update(resto);
@@ -148,7 +173,7 @@ const updateMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });
@@ -159,18 +184,18 @@ const deleteMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const movie = yield models_1.Movie.findByPk(id);
         if (!movie) {
             return res.status(400).json({
-                msg: `Movie not exist in db`
+                msg: `Movie not exist in db`,
             });
         }
         yield movie.destroy();
         res.json({
-            delete: movie
+            delete: movie,
         });
     }
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: `Talk with admin`
+            msg: `Talk with admin`,
         });
     }
 });

@@ -20,35 +20,22 @@ const Movie = db_connection_1.default.define('movie', {
         allowNull: false,
     },
     description: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: true,
-    },
-    description: {
         type: sequelize_1.DataTypes.TEXT,
     },
     creation_date: {
         type: sequelize_1.DataTypes.DATE,
-        allowNull: false,
-    },
-    price: {
-        type: sequelize_1.DataTypes.FLOAT,
-        allowNull: false,
-        defaultValue: 0.0,
+        allowNull: false
     },
     qualification: {
         type: sequelize_1.DataTypes.TINYINT,
-<<<<<<< HEAD
-        defaultValue: 0,
-    },
-=======
         defaultValue: 0
     },
     price: {
         type: sequelize_1.DataTypes.FLOAT
     }
->>>>>>> 972c04b0381ecefe917e2ab6bc984a3e82e6c9cd
 }, {
-    tableName: 'movie',
+    tableName: "movie"
 });
 exports.default = Movie;
+Movie.sync({ alter: true });
 //# sourceMappingURL=movie.js.map
