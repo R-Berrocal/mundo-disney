@@ -48,9 +48,7 @@ export const getCharacters=async(req:Request<unknown,unknown,unknown,TypesQueryC
                 characters
             });
         }
-        characters = await Character.findAll({
-            attributes:["name","image"]
-        });  
+        characters = await Character.findAll();  
         return res.json({
             characters
         });

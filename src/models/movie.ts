@@ -18,28 +18,23 @@ const Movie = db.define<MovieAttributes>(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: true,
+    description:{
+        type:DataTypes.TEXT,
     },
-    creation_date: {
-      type: DataTypes.DATE,
-      allowNull: false,
+    creation_date:{
+        type:DataTypes.DATE,
+        allowNull:false
     },
-    price: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-      defaultValue: 0.0,
+    qualification:{
+        type:DataTypes.TINYINT,
+        defaultValue:0
     },
-    qualification: {
-      type: DataTypes.TINYINT,
-      defaultValue: 0,
-    },
-  },
-  {
-    tableName: 'movie',
-  }
-);
+    price:{
+        type:DataTypes.FLOAT
+    }
+},{
+    tableName:"movie"
+})
 
 export default Movie;
 Movie.sync({ alter: true });
