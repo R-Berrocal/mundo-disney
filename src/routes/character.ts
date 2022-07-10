@@ -1,7 +1,7 @@
 import { Router, IRouter } from 'express';
 import {
   createCharacter,
-  createDetail,
+  // createDetail,
   deleteCharacter,
   getCharacter,
   getCharacters,
@@ -25,7 +25,7 @@ router.post(
   createCharacter
 );
 
-router.post('/detail', createDetail);
+// router.post('/detail', createDetail);
 
 router.put('/:id', updateCharacter);
 router.delete('/:id', deleteCharacter);

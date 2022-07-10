@@ -97,7 +97,21 @@ export const createCharacter = async (req: Request, res: Response) => {
   try {
     const { body } = req;
     const character = Character.build(body);
-    await character.save();
+    const { idcharacter } = await character.save();
+
+    await Promise.all(
+      body.moviesId.map(async (movieIdmovie: any) => {
+        const movie = await Movie.findByPk(movieIdmovie);
+
+        if (!movie) {
+          return res.status(400).json({
+            msg: `El id ${movieIdmovie} not exist in movie`,
+          });
+        }
+        const movie_has_character = Movie_has_character.build({ movieIdmovie, characterIdcharacter: idcharacter });
+        await movie_has_character.save();
+      })
+    );
 
     return res.status(201).json({
       character,
@@ -110,40 +124,40 @@ export const createCharacter = async (req: Request, res: Response) => {
   }
 };
 
-//Para asignar id de peliculas existentes a personajes existentes
-export const createDetail = async (req: Request, res: Response) => {
-  try {
-    const { moviesId, characterIdcharacter } = req.body;
-    const character = await Character.findByPk(characterIdcharacter);
+// //Para asignar id de peliculas existentes a personajes existentes
+// export const createDetail = async (req: Request, res: Response) => {
+//   try {
+//     const { moviesId, characterIdcharacter } = req.body;
+//     const character = await Character.findByPk(characterIdcharacter);
 
-    if (!character) {
-      return res.status(400).json({
-        msg: `El id ${characterIdcharacter} not exist in character`,
-      });
-    }
-    await Promise.all(
-      moviesId.map(async (movieIdmovie: any) => {
-        const movie = await Movie.findByPk(movieIdmovie);
+//     if (!character) {
+//       return res.status(400).json({
+//         msg: `El id ${characterIdcharacter} not exist in character`,
+//       });
+//     }
+//     await Promise.all(
+//       moviesId.map(async (movieIdmovie: any) => {
+//         const movie = await Movie.findByPk(movieIdmovie);
 
-        if (!movie) {
-          return res.status(400).json({
-            msg: `El id ${movieIdmovie} not exist in movie`,
-          });
-        }
-        const movie_has_character = Movie_has_character.build({ movieIdmovie, characterIdcharacter });
-        await movie_has_character.save();
-      })
-    );
-    return res.status(201).json({
-      status: 'ok',
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      msg: `Talk with admin`,
-    });
-  }
-};
+//         if (!movie) {
+//           return res.status(400).json({
+//             msg: `El id ${movieIdmovie} not exist in movie`,
+//           });
+//         }
+//         const movie_has_character = Movie_has_character.build({ movieIdmovie, characterIdcharacter });
+//         await movie_has_character.save();
+//       })
+//     );
+//     return res.status(201).json({
+//       status: 'ok',
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({
+//       msg: `Talk with admin`,
+//     });
+//   }
+// };
 
 export const updateCharacter = async (req: Request, res: Response) => {
   try {
