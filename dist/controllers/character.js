@@ -117,16 +117,18 @@ const createCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function
         const { body } = req;
         const character = models_1.Character.build(body);
         const { idcharacter } = yield character.save();
-        yield Promise.all(body.moviesId.map((movieIdmovie) => __awaiter(void 0, void 0, void 0, function* () {
-            const movie = yield models_1.Movie.findByPk(movieIdmovie);
-            if (!movie) {
-                return res.status(400).json({
-                    msg: `El id ${movieIdmovie} not exist in movie`,
-                });
-            }
-            const movie_has_character = models_1.Movie_has_character.build({ movieIdmovie, characterIdcharacter: idcharacter });
-            yield movie_has_character.save();
-        })));
+        if (body.moviesId) {
+            yield Promise.all(body.moviesId.map((movieIdmovie) => __awaiter(void 0, void 0, void 0, function* () {
+                const movie = yield models_1.Movie.findByPk(movieIdmovie);
+                if (!movie) {
+                    return res.status(400).json({
+                        msg: `El id ${movieIdmovie} not exist in movie`,
+                    });
+                }
+                const movie_has_character = models_1.Movie_has_character.build({ movieIdmovie, characterIdcharacter: idcharacter });
+                yield movie_has_character.save();
+            })));
+        }
         return res.status(201).json({
             character,
         });

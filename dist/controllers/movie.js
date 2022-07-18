@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMovie = exports.updateMovie = exports.createDetailMovies = exports.createMovie = exports.getDetailsMovie = exports.getMovie = exports.getMovies = void 0;
+exports.deleteMovie = exports.updateMovie = exports.createMovie = exports.getDetailsMovie = exports.getMovie = exports.getMovies = void 0;
 const sequelize_1 = require("sequelize");
 const models_1 = require("../models");
 const movie_has_genre_1 = __importDefault(require("../models/movie_has_genre"));
@@ -115,7 +115,31 @@ const createMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const { body } = req;
         const movie = models_1.Movie.build(body);
-        yield movie.save();
+        const { idmovie } = yield movie.save();
+        if (body.charactersId) {
+            yield Promise.all(body.charactersId.map((characterIdcharacter) => __awaiter(void 0, void 0, void 0, function* () {
+                const character = yield models_1.Character.findByPk(characterIdcharacter);
+                if (!character) {
+                    return res.status(400).json({
+                        msg: `El id ${characterIdcharacter} not exist in character`,
+                    });
+                }
+                const movie_has_character = models_1.Movie_has_character.build({ movieIdmovie: idmovie, characterIdcharacter });
+                yield movie_has_character.save();
+            })));
+        }
+        if (body.genresId) {
+            yield Promise.all(body.genresId.map((genreIdgenre) => __awaiter(void 0, void 0, void 0, function* () {
+                const genre = yield models_1.Genre.findByPk(genreIdgenre);
+                if (!genre) {
+                    return res.status(400).json({
+                        msg: `El id ${genreIdgenre} not exist in genre`,
+                    });
+                }
+                const movie_has_genre = movie_has_genre_1.default.build({ movieIdmovie: idmovie, genreIdgenre });
+                yield movie_has_genre.save();
+            })));
+        }
         return res.status(201).json({
             movie,
         });
@@ -128,35 +152,33 @@ const createMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.createMovie = createMovie;
-const createDetailMovies = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { movieIdmovie, genreIdgenre } = req.body;
-        const movie = yield models_1.Movie.findByPk(movieIdmovie);
-        const genre = yield models_1.Genre.findByPk(genreIdgenre);
-        if (!movie) {
-            return res.status(400).json({
-                msg: `El id ${movieIdmovie} not exist in movie`,
-            });
-        }
-        if (!genre) {
-            return res.status(400).json({
-                msg: `El id ${genreIdgenre} not exist in genre`,
-            });
-        }
-        const movie_has_genre = movie_has_genre_1.default.build({ movieIdmovie, genreIdgenre });
-        yield movie_has_genre.save();
-        return res.status(201).json({
-            movie_has_genre,
-        });
-    }
-    catch (error) {
-        console.log(error);
-        res.status(500).json({
-            msg: `Talk with admin`,
-        });
-    }
-});
-exports.createDetailMovies = createDetailMovies;
+// export const createDetailMovies = async (req: Request, res: Response) => {
+//   try {
+//     const { movieIdmovie, genreIdgenre } = req.body;
+//     const movie = await Movie.findByPk(movieIdmovie);
+//     const genre = await Genre.findByPk(genreIdgenre);
+//     if (!movie) {
+//       return res.status(400).json({
+//         msg: `El id ${movieIdmovie} not exist in movie`,
+//       });
+//     }
+//     if (!genre) {
+//       return res.status(400).json({
+//         msg: `El id ${genreIdgenre} not exist in genre`,
+//       });
+//     }
+//     const movie_has_genre = Movie_has_genre.build({ movieIdmovie, genreIdgenre });
+//     await movie_has_genre.save();
+//     return res.status(201).json({
+//       movie_has_genre,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({
+//       msg: `Talk with admin`,
+//     });
+//   }
+// };
 const updateMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
