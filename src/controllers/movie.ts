@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import TypesQueryMovie from '../interfaces/typesQueryMovie';
-import { Character, Genre, Movie } from '../models';
+import { Character, Genre, Movie, Movie_has_character } from '../models';
 import Movie_has_genre from '../models/movie_has_genre';
 
 export const getMovies = async (req: Request<unknown, unknown, unknown, TypesQueryMovie>, res: Response) => {
@@ -92,8 +92,38 @@ export const createMovie = async (req: Request, res: Response) => {
   try {
     const { body } = req;
     const movie = Movie.build(body);
-    await movie.save();
+    const { idmovie } = await movie.save();
 
+    if(body.charactersId){
+      await Promise.all(
+        body.charactersId.map(async (characterIdcharacter: any) => {
+          const character = await Character.findByPk(characterIdcharacter);
+  
+          if (!character) {
+            return res.status(400).json({
+              msg: `El id ${characterIdcharacter} not exist in character`,
+            });
+          }
+          const movie_has_character = Movie_has_character.build({ movieIdmovie:idmovie, characterIdcharacter});
+          await movie_has_character.save();
+        })
+      );
+    }
+    if(body.genresId){
+      await Promise.all(
+        body.genresId.map(async (genreIdgenre: any) => {
+          const genre = await Genre.findByPk(genreIdgenre);
+  
+          if (!genre) {
+            return res.status(400).json({
+              msg: `El id ${genreIdgenre} not exist in genre`,
+            });
+          }
+          const movie_has_genre = Movie_has_genre.build({ movieIdmovie:idmovie, genreIdgenre});
+          await movie_has_genre.save();
+        })
+      );
+    }
     return res.status(201).json({
       movie,
     });
@@ -105,34 +135,34 @@ export const createMovie = async (req: Request, res: Response) => {
   }
 };
 
-export const createDetailMovies = async (req: Request, res: Response) => {
-  try {
-    const { movieIdmovie, genreIdgenre } = req.body;
-    const movie = await Movie.findByPk(movieIdmovie);
-    const genre = await Genre.findByPk(genreIdgenre);
-    if (!movie) {
-      return res.status(400).json({
-        msg: `El id ${movieIdmovie} not exist in movie`,
-      });
-    }
-    if (!genre) {
-      return res.status(400).json({
-        msg: `El id ${genreIdgenre} not exist in genre`,
-      });
-    }
-    const movie_has_genre = Movie_has_genre.build({ movieIdmovie, genreIdgenre });
-    await movie_has_genre.save();
+// export const createDetailMovies = async (req: Request, res: Response) => {
+//   try {
+//     const { movieIdmovie, genreIdgenre } = req.body;
+//     const movie = await Movie.findByPk(movieIdmovie);
+//     const genre = await Genre.findByPk(genreIdgenre);
+//     if (!movie) {
+//       return res.status(400).json({
+//         msg: `El id ${movieIdmovie} not exist in movie`,
+//       });
+//     }
+//     if (!genre) {
+//       return res.status(400).json({
+//         msg: `El id ${genreIdgenre} not exist in genre`,
+//       });
+//     }
+//     const movie_has_genre = Movie_has_genre.build({ movieIdmovie, genreIdgenre });
+//     await movie_has_genre.save();
 
-    return res.status(201).json({
-      movie_has_genre,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      msg: `Talk with admin`,
-    });
-  }
-};
+//     return res.status(201).json({
+//       movie_has_genre,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({
+//       msg: `Talk with admin`,
+//     });
+//   }
+// };
 
 export const updateMovie = async (req: Request, res: Response) => {
   try {

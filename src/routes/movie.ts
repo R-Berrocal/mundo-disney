@@ -1,5 +1,5 @@
 import {Router, IRouter} from 'express';
-import { createDetailMovies, createMovie, deleteMovie,  getDetailsMovie, getMovie, getMovies, updateMovie } from '../controllers/movie';
+import {  createMovie, deleteMovie,  getDetailsMovie, getMovie, getMovies, updateMovie } from '../controllers/movie';
 import { check } from 'express-validator';
 import { validateFields } from '../middlewares/validate_fields';
 
@@ -16,11 +16,11 @@ router.post("/",[
     validateFields
 ],createMovie);
 
-router.post("/detail",[
-    check("movieIdmovie","id movie is required").not().isEmpty(),
-    check("genreIdgenre","id genre is required").not().isEmpty(),
-    validateFields
-],createDetailMovies)
+// router.post("/detail",[
+//     check("movieIdmovie","id movie is required").not().isEmpty(),
+//     check("genreIdgenre","id genre is required").not().isEmpty(),
+//     validateFields
+// ],createDetailMovies)
 
 router.put("/:id",updateMovie)
 router.delete("/:id",deleteMovie)

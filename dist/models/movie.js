@@ -37,5 +37,5 @@ const Movie = db_connection_1.default.define('movie', {
     tableName: "movie"
 });
 exports.default = Movie;
-Movie.sync({ alter: true });
+// Movie.sync({ alter: true });
 //# sourceMappingURL=movie.js.map

@@ -20,7 +20,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCharacter = exports.updateCharacter = exports.createDetail = exports.createCharacter = exports.getDetailsCharacter = exports.getCharacter = exports.getCharacters = void 0;
+exports.deleteCharacter = exports.updateCharacter = exports.createCharacter = exports.getDetailsCharacter = exports.getCharacter = exports.getCharacters = void 0;
 const sequelize_1 = require("sequelize");
 const models_1 = require("../models");
 const getCharacters = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -116,7 +116,17 @@ const createCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function
     try {
         const { body } = req;
         const character = models_1.Character.build(body);
-        yield character.save();
+        const { idcharacter } = yield character.save();
+        yield Promise.all(body.moviesId.map((movieIdmovie) => __awaiter(void 0, void 0, void 0, function* () {
+            const movie = yield models_1.Movie.findByPk(movieIdmovie);
+            if (!movie) {
+                return res.status(400).json({
+                    msg: `El id ${movieIdmovie} not exist in movie`,
+                });
+            }
+            const movie_has_character = models_1.Movie_has_character.build({ movieIdmovie, characterIdcharacter: idcharacter });
+            yield movie_has_character.save();
+        })));
         return res.status(201).json({
             character,
         });
@@ -129,38 +139,38 @@ const createCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.createCharacter = createCharacter;
-//Para asignar id de peliculas existentes a personajes existentes
-const createDetail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { moviesId, characterIdcharacter } = req.body;
-        const character = yield models_1.Character.findByPk(characterIdcharacter);
-        if (!character) {
-            return res.status(400).json({
-                msg: `El id ${characterIdcharacter} not exist in character`,
-            });
-        }
-        yield Promise.all(moviesId.map((val) => __awaiter(void 0, void 0, void 0, function* () {
-            const movie = yield models_1.Movie.findByPk(val);
-            if (!movie) {
-                return res.status(400).json({
-                    msg: `El id ${val} not exist in movie`,
-                });
-            }
-            const movie_has_character = models_1.Movie_has_character.build({ val, characterIdcharacter });
-            yield movie_has_character.save();
-        })));
-        return res.status(201).json({
-            status: 'ok',
-        });
-    }
-    catch (error) {
-        console.log(error);
-        res.status(500).json({
-            msg: `Talk with admin`,
-        });
-    }
-});
-exports.createDetail = createDetail;
+// //Para asignar id de peliculas existentes a personajes existentes
+// export const createDetail = async (req: Request, res: Response) => {
+//   try {
+//     const { moviesId, characterIdcharacter } = req.body;
+//     const character = await Character.findByPk(characterIdcharacter);
+//     if (!character) {
+//       return res.status(400).json({
+//         msg: `El id ${characterIdcharacter} not exist in character`,
+//       });
+//     }
+//     await Promise.all(
+//       moviesId.map(async (movieIdmovie: any) => {
+//         const movie = await Movie.findByPk(movieIdmovie);
+//         if (!movie) {
+//           return res.status(400).json({
+//             msg: `El id ${movieIdmovie} not exist in movie`,
+//           });
+//         }
+//         const movie_has_character = Movie_has_character.build({ movieIdmovie, characterIdcharacter });
+//         await movie_has_character.save();
+//       })
+//     );
+//     return res.status(201).json({
+//       status: 'ok',
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({
+//       msg: `Talk with admin`,
+//     });
+//   }
+// };
 const updateCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;

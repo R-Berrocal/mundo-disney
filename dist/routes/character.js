@@ -11,7 +11,7 @@ router.get('/detail', character_1.getDetailsCharacter);
 router.get('/:id', character_1.getCharacter);
 //Create Character
 router.post('/', [(0, express_validator_1.check)('name', 'name is required').not().isEmpty().isLength({ max: 50 }), validate_fields_1.validateFields], character_1.createCharacter);
-router.post('/detail', character_1.createDetail);
+// router.post('/detail', createDetail);
 router.put('/:id', character_1.updateCharacter);
 router.delete('/:id', character_1.deleteCharacter);
 exports.default = router;

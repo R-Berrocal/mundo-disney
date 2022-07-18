@@ -99,19 +99,22 @@ export const createCharacter = async (req: Request, res: Response) => {
     const character = Character.build(body);
     const { idcharacter } = await character.save();
 
-    await Promise.all(
-      body.moviesId.map(async (movieIdmovie: any) => {
-        const movie = await Movie.findByPk(movieIdmovie);
-
-        if (!movie) {
-          return res.status(400).json({
-            msg: `El id ${movieIdmovie} not exist in movie`,
-          });
-        }
-        const movie_has_character = Movie_has_character.build({ movieIdmovie, characterIdcharacter: idcharacter });
-        await movie_has_character.save();
-      })
-    );
+    if(body.moviesId){
+      await Promise.all(
+        body.moviesId.map(async (movieIdmovie: any) => {
+          const movie = await Movie.findByPk(movieIdmovie);
+  
+          if (!movie) {
+            return res.status(400).json({
+              msg: `El id ${movieIdmovie} not exist in movie`,
+            });
+          }
+          const movie_has_character = Movie_has_character.build({ movieIdmovie, characterIdcharacter: idcharacter });
+          await movie_has_character.save();
+        })
+      );
+    }
+    
 
     return res.status(201).json({
       character,
