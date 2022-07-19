@@ -51,7 +51,7 @@ export const getCharacters = async (req: Request<unknown, unknown, unknown, Type
         characters,
       });
     }
-    characters = await Character.findAll();
+    characters = await Character.findAll({include:{model:Movie}});
     return res.json({
       characters,
     });

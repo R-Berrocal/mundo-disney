@@ -51,7 +51,16 @@ export const getMovies = async (req: Request<unknown, unknown, unknown, TypesQue
         movie,
       });
     }
-    movie = await Movie.findAll();
+    movie = await Movie.findAll({
+      include:[
+        {
+          model:Character
+        },
+        {
+          model:Genre
+        }
+      ]
+    });
     return res.json({
       movie,
     });
@@ -66,7 +75,7 @@ export const getMovies = async (req: Request<unknown, unknown, unknown, TypesQue
 export const getMovie = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const movie = await Movie.findByPk(id, { include: { model: Character } });
+    const movie = await Movie.findByPk(id, { include: [{ model: Character },{ model: Genre}] });
     if (!movie) {
       return res.status(400).json({
         msg: `Movie not exist in db`,
