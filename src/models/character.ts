@@ -10,7 +10,7 @@ const Character = db.define<CharacterAttributes>("character_",{
         autoIncrement:true
     },
     image:{
-        type:DataTypes.STRING,
+        type:DataTypes.TEXT,
         allowNull:true,
     },
     name:{

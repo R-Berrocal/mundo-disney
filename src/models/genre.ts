@@ -12,7 +12,7 @@ const Genre = db.define<GenreAttributes>("genre",{
         type: DataTypes.STRING
     },
     image:{
-        type:DataTypes.STRING
+        type:DataTypes.TEXT
     }
 },{
     tableName:"genre"

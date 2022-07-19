@@ -12,7 +12,7 @@ const Character = db_connection_1.default.define("character_", {
         autoIncrement: true
     },
     image: {
-        type: sequelize_1.DataTypes.STRING,
+        type: sequelize_1.DataTypes.TEXT,
         allowNull: true,
     },
     name: {

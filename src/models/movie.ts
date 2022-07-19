@@ -11,7 +11,7 @@ const Movie = db.define<MovieAttributes>(
       autoIncrement: true,
     },
     image: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     title: {

@@ -15,7 +15,7 @@ const Genre = db_connection_1.default.define("genre", {
         type: sequelize_1.DataTypes.STRING
     },
     image: {
-        type: sequelize_1.DataTypes.STRING
+        type: sequelize_1.DataTypes.TEXT
     }
 }, {
     tableName: "genre"
