@@ -29,9 +29,14 @@ const Carrito = db.define<CarritoAttributes>("carrito",{
     cantidad:{
         type:DataTypes.INTEGER,
         defaultValue:1
-    }
+    },
+    condition: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+    },
 },{
     tableName:"carrito"
 });
-
+// Carrito.sync({alter:true})
 export default Carrito;

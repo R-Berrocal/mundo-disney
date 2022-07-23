@@ -5,33 +5,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const db_connection_1 = __importDefault(require("../db/db_connection"));
-const movie_1 = __importDefault(require("./movie"));
-const user_1 = __importDefault(require("./user"));
-const Carrito = db_connection_1.default.define("carrito", {
-    idcarrito: {
+const carrito_1 = __importDefault(require("./carrito"));
+const Orden = db_connection_1.default.define("orden", {
+    idorden: {
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    userIduser: {
+    carritoIdcarrito: {
         type: sequelize_1.DataTypes.INTEGER,
         references: {
-            model: user_1.default,
-            key: 'iduser'
+            model: carrito_1.default,
+            key: 'idcarrito'
         },
         allowNull: false
     },
-    movieIdmovie: {
-        type: sequelize_1.DataTypes.INTEGER,
-        references: {
-            model: movie_1.default,
-            key: 'idmovie'
-        },
-        allowNull: false
-    },
-    cantidad: {
-        type: sequelize_1.DataTypes.INTEGER,
-        defaultValue: 1
+    total: {
+        type: sequelize_1.DataTypes.FLOAT,
+        defaultValue: 0
     },
     condition: {
         type: sequelize_1.DataTypes.BOOLEAN,
@@ -39,8 +30,7 @@ const Carrito = db_connection_1.default.define("carrito", {
         defaultValue: true,
     },
 }, {
-    tableName: "carrito"
+    tableName: "orden"
 });
-// Carrito.sync({alter:true})
-exports.default = Carrito;
-//# sourceMappingURL=carrito.js.map
+exports.default = Orden;
+//# sourceMappingURL=orden.js.map

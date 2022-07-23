@@ -72,7 +72,16 @@ const getMovies = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 movie,
             });
         }
-        movie = yield models_1.Movie.findAll();
+        movie = yield models_1.Movie.findAll({
+            include: [
+                {
+                    model: models_1.Character
+                },
+                {
+                    model: models_1.Genre
+                }
+            ]
+        });
         return res.json({
             movie,
         });
@@ -88,7 +97,7 @@ exports.getMovies = getMovies;
 const getMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const movie = yield models_1.Movie.findByPk(id, { include: { model: models_1.Character } });
+        const movie = yield models_1.Movie.findByPk(id, { include: [{ model: models_1.Character }, { model: models_1.Genre }] });
         if (!movie) {
             return res.status(400).json({
                 msg: `Movie not exist in db`,

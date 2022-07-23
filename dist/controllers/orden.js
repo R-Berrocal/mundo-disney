@@ -20,23 +20,21 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCarrito = exports.updateCarrito = exports.createCarrito = exports.getCarritoUserId = exports.getCarritoId = exports.getCarrito = void 0;
+exports.deleteOrden = exports.updateOrden = exports.createOrden = exports.getOrdenCarritoId = exports.getOrdenId = exports.getOrden = void 0;
 const models_1 = require("../models");
-const getCarrito = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const carrito = yield models_1.Carrito.findAll({
+        const orden = yield models_1.Orden.findAll({
             where: { condition: true },
             include: [
                 {
-                    model: models_1.User
-                },
-                {
-                    model: models_1.Movie
+                    model: models_1.Carrito,
+                    include: [{ model: models_1.Movie }, { model: models_1.User }]
                 }
             ]
         });
         return res.json({
-            carrito,
+            orden,
         });
     }
     catch (error) {
@@ -46,18 +44,25 @@ const getCarrito = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
 });
-exports.getCarrito = getCarrito;
-const getCarritoId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getOrden = getOrden;
+const getOrdenId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const carrito = yield models_1.Carrito.findByPk(id);
-        if (!carrito) {
+        const orden = yield models_1.Orden.findByPk(id, {
+            include: [
+                {
+                    model: models_1.Carrito,
+                    include: [{ model: models_1.Movie }, { model: models_1.User }]
+                }
+            ]
+        });
+        if (!orden) {
             return res.status(401).json({
-                mgs: 'carrito not found',
+                mgs: 'orden not found',
             });
         }
         return res.json({
-            carrito,
+            orden,
         });
     }
     catch (error) {
@@ -67,23 +72,24 @@ const getCarritoId = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         });
     }
 });
-exports.getCarritoId = getCarritoId;
-const getCarritoUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getOrdenId = getOrdenId;
+const getOrdenCarritoId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const carrito = yield models_1.Carrito.findAll({
-            where: { userIduser: id },
+        const orden = yield models_1.Orden.findAll({
+            where: { carritoIdcarrito: id },
             include: {
-                model: models_1.Movie
+                model: models_1.Carrito,
+                include: [{ model: models_1.Movie }, { model: models_1.User }]
             }
         });
-        if (!carrito) {
+        if (!orden) {
             return res.status(401).json({
-                mgs: 'carrito not found',
+                mgs: 'orden not found',
             });
         }
         return res.json({
-            carrito,
+            orden,
         });
     }
     catch (error) {
@@ -93,33 +99,22 @@ const getCarritoUserId = (req, res) => __awaiter(void 0, void 0, void 0, functio
         });
     }
 });
-exports.getCarritoUserId = getCarritoUserId;
-const createCarrito = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getOrdenCarritoId = getOrdenCarritoId;
+const createOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { body } = req;
-        const idUser = body.userIduser;
-        const idMovie = body.userIduser;
-        const user = yield models_1.User.findByPk(idUser);
-        const movie = yield models_1.Movie.findByPk(idMovie);
-        if (!user) {
+        const idCarrito = body.carritoIdcarrito;
+        const carrito = yield models_1.Carrito.findByPk(idCarrito);
+        if (!carrito) {
             return res.status(400).json({
-                msg: `El id ${idUser} not exist in user / userIduser`,
+                msg: `El id ${idCarrito} not exist in carrito / carritoIdcarrito`,
             });
         }
-        if (!movie) {
-            return res.status(400).json({
-                msg: `El id ${idMovie} not exist in user / userIduser`,
-            });
-        }
-        if (!body.movieIdmovie) {
-            return res.status(400).json({
-                msg: `El id ${body.movieIdmovie} not exist in movie / movieIdmovie`,
-            });
-        }
-        const carrito = models_1.Carrito.build(body);
-        yield carrito.save();
+        yield carrito.update({ condition: false });
+        const orden = models_1.Orden.build(body);
+        yield orden.save();
         return res.status(201).json({
-            carrito,
+            orden,
         });
     }
     catch (error) {
@@ -129,19 +124,19 @@ const createCarrito = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
 });
-exports.createCarrito = createCarrito;
-const updateCarrito = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createOrden = createOrden;
+const updateOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const _a = req.body, { idcarrito } = _a, resto = __rest(_a, ["idcarrito"]);
-        const carrito = yield models_1.Carrito.findByPk(id);
-        if (!carrito) {
+        const _a = req.body, { idorden } = _a, resto = __rest(_a, ["idorden"]);
+        const orden = yield models_1.Orden.findByPk(id);
+        if (!orden) {
             return res.status(400).json({
-                msg: `Carrito not exist in db`,
+                msg: `Orden not exist in db`,
             });
         }
-        yield carrito.update(resto);
-        return res.json({ carrito });
+        yield orden.update(resto);
+        return res.json({ orden });
     }
     catch (error) {
         console.log(error);
@@ -150,19 +145,19 @@ const updateCarrito = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
 });
-exports.updateCarrito = updateCarrito;
-const deleteCarrito = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.updateOrden = updateOrden;
+const deleteOrden = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const carrito = yield models_1.Carrito.findByPk(id);
-        if (!carrito) {
+        const orden = yield models_1.Orden.findByPk(id);
+        if (!orden) {
             return res.status(400).json({
-                msg: `Carrito not exist in db`,
+                msg: `Orden not exist in db`,
             });
         }
-        yield carrito.destroy();
+        yield orden.destroy();
         res.json({
-            carrito,
+            orden,
         });
     }
     catch (error) {
@@ -172,5 +167,5 @@ const deleteCarrito = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
 });
-exports.deleteCarrito = deleteCarrito;
-//# sourceMappingURL=carrito.js.map
+exports.deleteOrden = deleteOrden;
+//# sourceMappingURL=orden.js.map

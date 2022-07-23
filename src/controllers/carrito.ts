@@ -4,6 +4,7 @@ import { Carrito, Movie, User } from '../models';
 export const getCarrito = async (req: Request, res: Response) => {
   try {
     const carrito = await Carrito.findAll({
+        where:{condition:true},
         include:[
             {
                 model:User
@@ -99,7 +100,7 @@ export const createCarrito = async (req: Request, res: Response) => {
     await carrito.save();
 
     return res.status(201).json({
-      genre: carrito,
+       carrito,
     });
   } catch (error) {
     console.log(error);

@@ -23,6 +23,7 @@ app.use("/characters", routes_1.character);
 app.use("/movies", routes_1.movie);
 app.use("/genres", routes_1.genre);
 app.use("/carrito", routes_1.carrito);
+app.use("/orden", routes_1.orden);
 //listen
 app.listen(process.env.PORT, () => console.log("server running in the port", process.env.PORT));
 exports.default = app;

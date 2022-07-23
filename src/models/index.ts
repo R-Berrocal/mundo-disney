@@ -5,6 +5,7 @@ import Movie_has_character from './movie_has_character';
 import Genre from './genre';
 import Movie_has_genre from './movie_has_genre';
 import Carrito from './carrito';
+import Orden from './orden';
 
 Movie.belongsToMany(Genre,{through:Movie_has_genre});
 Genre.belongsToMany(Movie,{through:Movie_has_genre});
@@ -26,11 +27,18 @@ Carrito.belongsTo(Movie,{
     foreignKey:'movieIdmovie'
 })
 
+Carrito.hasMany(Orden,{
+    foreignKey:'carritoIdcarrito'
+});
+Orden.belongsTo(Carrito,{
+    foreignKey: 'carritoIdcarrito'
+})
 export {
     User,
     Character,
     Movie,
     Movie_has_character,
     Genre,
-    Carrito
+    Carrito,
+    Orden
 }

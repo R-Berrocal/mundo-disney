@@ -6,6 +6,7 @@ interface CarritoAttributes extends Model<InferAttributes<CarritoAttributes>,Inf
     userIduser:number;
     movieIdmovie:number;
     cantidad:number;
+    condition:boolean;
 }
 
 export default CarritoAttributes;

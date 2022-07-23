@@ -69,7 +69,7 @@ const getCharacters = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 characters,
             });
         }
-        characters = yield models_1.Character.findAll();
+        characters = yield models_1.Character.findAll({ include: { model: models_1.Movie } });
         return res.json({
             characters,
         });
