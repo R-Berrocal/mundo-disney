@@ -72,7 +72,7 @@ const getCarritoUserId = (req, res) => __awaiter(void 0, void 0, void 0, functio
     try {
         const { id } = req.params;
         const carrito = yield models_1.Carrito.findAll({
-            where: { userIduser: id },
+            where: [{ userIduser: id }, { condition: true }],
             include: {
                 model: models_1.Movie
             }

@@ -48,7 +48,7 @@ export const getCarritoUserId = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const carrito = await Carrito.findAll({
-        where:{userIduser:id},
+        where:[{userIduser:id},{condition:true}],
         include:{
             model:Movie
         }
