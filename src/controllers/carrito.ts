@@ -73,7 +73,7 @@ export const createCarrito = async (req: Request, res: Response) => {
   try {
     const { body } = req;
     const idUser = body.userIduser;
-    const idMovie = body.userIduser;
+    const idMovie = body.movieIdmovie;
 
 
     const user = await User.findByPk(idUser);
@@ -85,17 +85,10 @@ export const createCarrito = async (req: Request, res: Response) => {
     }
     if(!movie){
         return res.status(400).json({
-            msg: `El id ${idMovie} not exist in user / userIduser`,
+            msg: `El id ${idMovie} not exist in movie / movieIdmovie`,
         });
     }
         
-
-    
-    if(!body.movieIdmovie){
-        return res.status(400).json({
-            msg: `El id ${body.movieIdmovie} not exist in movie / movieIdmovie`,
-        });
-    }
     const carrito = Carrito.build(body);
     await carrito.save();
 

@@ -98,7 +98,7 @@ const createCarrito = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { body } = req;
         const idUser = body.userIduser;
-        const idMovie = body.userIduser;
+        const idMovie = body.movieIdmovie;
         const user = yield models_1.User.findByPk(idUser);
         const movie = yield models_1.Movie.findByPk(idMovie);
         if (!user) {
@@ -108,12 +108,7 @@ const createCarrito = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         if (!movie) {
             return res.status(400).json({
-                msg: `El id ${idMovie} not exist in user / userIduser`,
-            });
-        }
-        if (!body.movieIdmovie) {
-            return res.status(400).json({
-                msg: `El id ${body.movieIdmovie} not exist in movie / movieIdmovie`,
+                msg: `El id ${idMovie} not exist in movie / movieIdmovie`,
             });
         }
         const carrito = models_1.Carrito.build(body);
